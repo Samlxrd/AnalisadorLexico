@@ -1,0 +1,10 @@
+[1] ''' Ex-03-incorreto.cic
+[2] Programa
+[3] leia(<a>)
+[4] <soma> := <a> + R$23.34
+[5] se <a> <= <b> então
+[6]  imprima(34F.34e23A)
+[7]  imprima("Fim prog"rama") 
+[8] fim_programa
+----------------^
+Comentario nao terminado.
