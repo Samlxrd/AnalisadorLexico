@@ -100,6 +100,9 @@ def erro_lexico(current_state):
         case 25:
             error_name = 'Atribuicao invalida, tente :='
 
+        case 28:
+            error_name = 'Comparacao invalida, tente !='
+
     if col < 1:
         err.append([file.tell(), lines-1, last_col-1, error_name])
     else:
@@ -143,6 +146,8 @@ def get_token(current_state, palavra):
                 tk = "tk_and"
             elif palavra == '|':
                 tk = "tk_or"
+            elif palavra == '=':
+                tk = "tk_eq"
             
             return [tk, palavra]
 
@@ -183,8 +188,12 @@ def get_token(current_state, palavra):
         
         case 26:
             return["tk_ge", palavra]
+        
         case 27:
             return["tk_gt", palavra]
+        
+        case 28:
+            return ["tk_dif", palavra]
 
 def proximo_token():
     """
@@ -234,7 +243,7 @@ def proximo_token():
                     palavra += char
                     state = 6
 
-                elif char in '-~+*&|,()':
+                elif char in '-~+*&|,()=':
                     palavra += char
 
                     token, val = get_token(state, palavra)
@@ -254,6 +263,10 @@ def proximo_token():
                 elif char == ':':           # Atribuição
                     palavra += char
                     state = 25
+
+                elif char == '!':
+                    palavra += char
+                    state = 28
 
                 
                 else:
@@ -589,6 +602,18 @@ def proximo_token():
                             retreat()
                     token, val = get_token(state, palavra)
                     return [token, val, pos]
+                
+            case 28:
+                char = read_char()
+
+                if char == '=':
+                    palavra += char
+
+                    token, val = get_token(state, palavra)
+                    return [token, val, pos]
+                
+                else:
+                    state = erro_lexico(state)
 
 
 
