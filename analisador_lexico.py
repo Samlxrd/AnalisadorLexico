@@ -610,30 +610,38 @@ for a in arqs:
     col = 1
     err = []
 
-    with open(a) as file:
-        tk = None
-        pairs = []
+    if not a.endswith('.cic'):
+        print(f"Arquivo '{a}' ignorado, não foi encontrada a extensão '.cic'")
+        continue
 
-        while 1:
-            tk = proximo_token()
+    try:
+        with open(a) as file:
+            tk = None
+            pairs = []
 
-            if tk:
-                if tk[-1] == 'FIM':
-                    tk.pop()
-                    if tk[0] != '':
+            while 1:
+                tk = proximo_token()
+
+                if tk:
+                    if tk[-1] == 'FIM':
+                        tk.pop()
+                        if tk[0] != '':
+                            pairs.append(tk)
+                        break
+
+                    if tk == 'COMMENT':
+                        continue
+
+                    elif tk == 'ERR':
+                        continue
+                    else:
                         pairs.append(tk)
-                    break
-
-                if tk == 'COMMENT':
-                    continue
-
-                elif tk == 'ERR':
-                    continue
                 else:
-                    pairs.append(tk)
-            else:
-                print("Leitura feita com sucesso.")
-                break
+                    print("Leitura feita com sucesso.")
+                    break
+    except FileNotFoundError:
+        print(f"Não foi possível abrir o arquivo '{a}', verifique se o arquivo existe no diretório.")
+        continue
             
 
     # Arquivos de saída
